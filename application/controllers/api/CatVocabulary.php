@@ -2,11 +2,16 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 require(APPPATH.'libraries/REST_Controller.php');
 
-class CatVocablary extends REST_Controller
+class Catvocabulary extends REST_Controller
 {
     public function index_get()
     {
-        $this->response($this->db->get('vocabulary')->result());
+        $this->response($this->db
+            ->where('level','8')
+            ->order_by('order','ASC')
+            ->join('level b','a.level = b.level_id')
+            ->get('cat_vocabulary a ')
+            ->result());
     }
 
     public function index_post()
@@ -15,6 +20,7 @@ class CatVocablary extends REST_Controller
         $obj = json_decode($json);
         $rs = $this->db
             ->where('level',$obj->level)
+            ->join('level b','a.level = b.level_id')
             ->order_by('order','ASC')
             ->get('cat_vocabulary a ')
             ->result();
